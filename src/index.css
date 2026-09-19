@@ -93,7 +93,7 @@
 }
 
 .text-h2 {
-  font-size: clamp(18px, 4vw, 36px);
+  font-size: 18px;
   font-weight: bold;  
 }
 
