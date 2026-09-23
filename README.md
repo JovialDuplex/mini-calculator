@@ -1,6 +1,6 @@
 # MINI CALCULATOR 
 ce projet contient la version 1 de mini calculator.
-[mini calculator](https://localhost:5173/)
+[mini calculator](https://mini-calculator-jade-six.vercel.app/)
 
 ## Fonctionnalites de l'application 
 Cette Application permet d'effectuer les operations basiques tels que : 
