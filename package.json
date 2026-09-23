@@ -1,5 +1,5 @@
 {
-  "name": "calculator",
+  "name": "mini calculator",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.1",
     "cn": "^0.3.0",
     "lucide-react": "^1.46.0",
+    "mathjs": "^15.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "shadcn": "^4.21.0",
