@@ -1,6 +1,6 @@
 # MINI CALCULATOR 
-ce projet contient la version 1 de mini calculator.
-[mini calculator](https://mini-calculator-jade-six.vercel.app/)
+ce mini projet contient la version 1 de mini calculator.
+[mini calculator](https://localhost:5173/)
 
 ## Fonctionnalites de l'application 
 Cette Application permet d'effectuer les operations basiques tels que : 
@@ -10,3 +10,11 @@ Cette Application permet d'effectuer les operations basiques tels que :
 - Division
 - Historique des calculs effectuer 
 - Systeme de memorisation
+
+## Presentation de l'application
+![image de l'application](/public/Capture.PNG)
+
+
+## Technologies utilisees
+- MathJs pour les calculs 
+- 

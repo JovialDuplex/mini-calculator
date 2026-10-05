@@ -1,15 +1,18 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {evaluate} from "mathjs";
 
 export default function useCalculator(){
-    const memory = localStorage.getItem("memory");
+    const memory: string|null = localStorage.getItem("memory");
+
     const [history, setHistory] = useState<string[]>(JSON.parse(localStorage.getItem("history") ?? "[]"))
     const [result, setResult] = useState<string>("0");
 
-    const calculate = (input:string)=> {
-        history.push(`${input} = ${evaluate(input)}`);
-        localStorage.setItem("history", JSON.stringify(history));
+    const calculate = (input:string, setIput:React.Dispatch<React.SetStateAction<string>>)=> {
         setResult(String(evaluate(input)));
+        history.push(`${input} = ${String(evaluate(input))}`);
+        localStorage.setItem("history", JSON.stringify(history));
+        
+        localStorage.setItem("temp", String(evaluate(input)));
     };
 
     //history function

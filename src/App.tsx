@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "./components/ui/button"
 import { type BaseUIEvent } from "@base-ui/react";
 import * as LucideIcon from "lucide-react";
@@ -50,6 +50,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem("memory", "0");
     localStorage.setItem("history", "[]");
+    localStorage.setItem("temp", "0");
 
     inputRef.current?.focus();
   }, []);
@@ -59,6 +60,8 @@ function App() {
   const clickButton = (event: BaseUIEvent<React.MouseEvent<HTMLButtonElement, MouseEvent>>) => {
     const value: string = event.currentTarget.value;
     const label: string | undefined = event.currentTarget.dataset.label;
+    const temp:string|null = localStorage.getItem("temp") ?? "0";
+
     if(label === "History") {
       setOpenDialog(true);
     }
@@ -66,7 +69,12 @@ function App() {
     if(label === "+/-") {
       setInputValue((prev: React.SetStateAction<string>) => prev !== "0" ? "-" + prev : prev);
     } else {
-      setInputValue((prev: React.SetStateAction<string>) => prev === "0" ? value: prev + value);
+      setInputValue((prev: React.SetStateAction<string>) => {
+        if(temp !== "0"){
+          return temp+value;
+        }
+        return prev === "0" ? value: prev + value;
+      });
     }
 
     console.log(inputValue);
@@ -74,7 +82,7 @@ function App() {
     if (myButtonType === "function") {
       if (label && label === "DEL") { setInputValue((prev: React.SetStateAction<string>)=> prev.toString().length <=1 ? "0" : prev.toString().slice(0, -1));}
       if (label && label === "AC") { setInputValue("0"); }
-      if (label && label === "=") { calculator.calculate(inputValue); }
+      if (label && label === "=") { calculator.calculate(inputValue, setInputValue); }
       if (label && label === "MC") { calculator.memoryClear(); }
       if (label && label === "M+") { calculator.memoryPLus(inputValue) }
       if (label && label === "M-") { calculator.memoryMinus(inputValue) }
