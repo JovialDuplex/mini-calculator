@@ -7,7 +7,7 @@ export default function useCalculator(){
     const [history, setHistory] = useState<string[]>(JSON.parse(localStorage.getItem("history") ?? "[]"))
     const [result, setResult] = useState<string>("0");
 
-    const calculate = (input:string, setIput:React.Dispatch<React.SetStateAction<string>>)=> {
+    const calculate = (input:string)=> {
         setResult(String(evaluate(input)));
         history.push(`${input} = ${String(evaluate(input))}`);
         localStorage.setItem("history", JSON.stringify(history));

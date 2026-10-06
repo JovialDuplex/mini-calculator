@@ -82,7 +82,7 @@ function App() {
     if (myButtonType === "function") {
       if (label && label === "DEL") { setInputValue((prev: React.SetStateAction<string>)=> prev.toString().length <=1 ? "0" : prev.toString().slice(0, -1));}
       if (label && label === "AC") { setInputValue("0"); }
-      if (label && label === "=") { calculator.calculate(inputValue, setInputValue); }
+      if (label && label === "=") { calculator.calculate(inputValue); }
       if (label && label === "MC") { calculator.memoryClear(); }
       if (label && label === "M+") { calculator.memoryPLus(inputValue) }
       if (label && label === "M-") { calculator.memoryMinus(inputValue) }
