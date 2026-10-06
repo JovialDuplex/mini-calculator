@@ -1,47 +1,86 @@
 import React, { useState } from "react";
-import {evaluate} from "mathjs";
+import { evaluate } from "mathjs";
 
-export default function useCalculator(){
-    const memory: string|null = localStorage.getItem("memory");
-
-    const [history, setHistory] = useState<string[]>(JSON.parse(localStorage.getItem("history") ?? "[]"))
+export default function useCalculator() {
+    const [history, setHistory] = useState<string[]>(() => {
+        try {
+            return JSON.parse(localStorage.getItem("history") ?? "[]");
+        } catch {
+            return [];
+        }
+    });
     const [result, setResult] = useState<string>("0");
 
-    const calculate = (input:string)=> {
-        setResult(String(evaluate(input)));
-        history.push(`${input} = ${String(evaluate(input))}`);
-        localStorage.setItem("history", JSON.stringify(history));
-        
-        localStorage.setItem("temp", String(evaluate(input)));
+    const calculate = (input: string): string => {
+        try {
+            const evaluated = evaluate(input);
+            const res = String(evaluated);
+            setResult(res);
+            setHistory((prev) => {
+                const updated = [...prev, `${input} = ${res}`];
+                localStorage.setItem("history", JSON.stringify(updated));
+                return updated;
+            });
+            localStorage.setItem("temp", res);
+            return res;
+        } catch {
+            setResult("Error");
+            return "Error";
+        }
     };
 
-    //history function
-    const clearHistory = ()=> localStorage.setItem("history", "[]");
-    const removeHistorItem = (index:number)=>{
-        localStorage.setItem("history", JSON.stringify(history.filter((_, myindex)=>myindex != index)))
-        setHistory((prev)=> prev.filter((_, myindex)=> myindex !== index ));
+    // history functions
+    const clearHistory = () => {
+        setHistory([]);
+        localStorage.setItem("history", "[]");
+    };
+
+    const removeHistorItem = (index: number) => {
+        setHistory((prev) => {
+            const updated = prev.filter((_, myindex) => myindex !== index);
+            localStorage.setItem("history", JSON.stringify(updated));
+            return updated;
+        });
     };
 
     // memory functions
-    const memoryClear = ()=>localStorage.setItem("memory", "0");
-    const memoryPLus = (input:string)=> {
-        if(memory) {
-            localStorage.setItem("memory", `${evaluate(`${input} + ${localStorage.getItem("memory")}`)}`)
-        }
-    }
-    const memoryMinus = (input:string)=>{
-         if(memory) {
-            localStorage.setItem("memory", `${evaluate(`${input} - ${localStorage.getItem("memory")}`)}`)
-        }
-    }
-    const memoryRecall = (input:string, setInput:(value: React.SetStateAction<string>)=>void) =>{ 
-        if (memory){
-            setInput(input + localStorage.getItem("memory"))
-        }
-    }
-    
+    const memoryClear = () => {
+        localStorage.setItem("memory", "0");
+    };
+
+    const memoryPLus = (input: string) => {
+        try {
+            const memoryVal = localStorage.getItem("memory") ?? "0";
+            const val = input ? evaluate(input) : 0;
+            const updated = String(evaluate(`${val} + ${memoryVal}`));
+            localStorage.setItem("memory", updated);
+        } catch {}
+    };
+
+    const memoryMinus = (input: string) => {
+        try {
+            const memoryVal = localStorage.getItem("memory") ?? "0";
+            const val = input ? evaluate(input) : 0;
+            const updated = String(evaluate(`${val} - ${memoryVal}`));
+            localStorage.setItem("memory", updated);
+        } catch {}
+    };
+
+    const memoryRecall = (
+        _currentInput: string,
+        setInput: React.Dispatch<React.SetStateAction<string>>
+    ) => {
+        const mem = localStorage.getItem("memory") ?? "0";
+        setInput((prev) => {
+            if (!prev || prev === "0") return mem;
+            if (/[+\-*/]$/.test(prev)) return prev + mem;
+            return prev + "+" + mem;
+        });
+    };
+
     return {
         calculate,
+        setResult,
         memoryPLus,
         memoryMinus,
         memoryClear,
@@ -50,5 +89,5 @@ export default function useCalculator(){
         removeHistorItem,
         history,
         result,
-    }
+    };
 }
